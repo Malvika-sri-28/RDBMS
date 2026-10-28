@@ -2,11 +2,7 @@
 
 # 🗄️ Relational Database Management System (RDBMS) Practicals
 
-[![MySQL](https://img.shields.io/badge/MySQL-8.0-blue?logo=mysql&logoColor=white)](https://www.mysql.com/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Malvika-sri-28/RDBMS/pulls)
-
-*This repository contains SQL scripts, relational schemas, ER diagrams, query implementations, and execution outputs for the **Relational Database Management System (RDBMS)** coursework.*
+*This repository contains SQL scripts, relational schemas, ER diagrams, query implementations, and execution outputs for the **Relational Database Management System (RDBMS)** *
 
 </div>
 
@@ -72,6 +68,3 @@ RDBMS/
 
 ---
 
-## 📄 License
-
-This repository is maintained for academic and educational purposes under the MIT License.
