@@ -2,22 +2,22 @@
 
 ## 🎯 Aim
 
-Create an Employee–Department–Project relational database, insert at least 30 employees across 5 departments and 8 projects, and demonstrate SQL queries using **Selection**, **Projection**, **Aggregate Functions**, **GROUP BY**, **HAVING**, **CASE** expressions, and **ORDER BY**.
+To create an Employee–Department–Project relational database, insert at least 30 employees across 5 departments and 8 projects, and demonstrate SQL queries using **Selection**, **Projection**, **Aggregate Functions**, **GROUP BY**, **HAVING**, **CASE** expressions, and **ORDER BY**.
 
 ---
 
 ## 📋 Objectives
 
 - Design and populate a normalized `CompanyDB` schema with `Department`, `Project`, and `Employee` tables.
-- Write queries demonstrating each SQL clause/operator individually.
-- Use **aggregate functions** (`COUNT`, `AVG`, `MAX`, `MIN`, `SUM`) for statistical analysis.
-- Apply **CASE** expressions for conditional classification.
+- Execute SQL queries demonstrating relational algebra operations (Selection, Projection).
+- Use **aggregate functions** (`COUNT`, `AVG`, `MAX`, `MIN`, `SUM`) for data summarization.
+- Apply **GROUP BY** and **HAVING** clauses for group-level filtering.
+- Implement conditional logic using **CASE** expressions.
+- Perform multi-table joins to combine related records.
 
 ---
 
-## 🗄️ Database: `CompanyDB`
-
-### Schema Diagram
+## 🗄️ Database Schema: `CompanyDB`
 
 ```
 Department (dept_id PK, dept_name)
@@ -27,70 +27,26 @@ Department (dept_id PK, dept_name)
      └──< Employee (emp_id PK, emp_name, salary, hire_date, dept_id FK, project_id FK)
 ```
 
-### Tables
-
-#### `Department`
-| Column | Type | Constraint |
-| :--- | :--- | :--- |
-| `dept_id` | INT | PRIMARY KEY |
-| `dept_name` | VARCHAR(50) | NOT NULL |
-
-#### `Project`
-| Column | Type | Constraint |
-| :--- | :--- | :--- |
-| `project_id` | INT | PRIMARY KEY |
-| `project_name` | VARCHAR(100) | NOT NULL |
-| `budget` | DECIMAL(12,2) | — |
-| `dept_id` | INT | FOREIGN KEY → `Department` |
-
-#### `Employee`
-| Column | Type | Constraint |
-| :--- | :--- | :--- |
-| `emp_id` | INT | PRIMARY KEY |
-| `emp_name` | VARCHAR(50) | NOT NULL |
-| `salary` | DECIMAL(10,2) | — |
-| `hire_date` | DATE | — |
-| `dept_id` | INT | FOREIGN KEY → `Department` |
-| `project_id` | INT | FOREIGN KEY → `Project` |
+- **Departments (5):** IT, HR, Finance, Marketing, Operations
+- **Projects (8):** Enterprise Cloud, Machine Learning Platform, Talent Acquisition System, Audit & Accounting Suite, Social Media Growth, Logistics Optimization, Customer iOS App, Corporate Wellness
+- **Employees (30):** Distributed across all departments with salaries ranging from ₹48,000 to ₹84,000
 
 ---
 
-## 📊 Data Summary
+## 💻 SQL Script
 
-| Table | Records | Details |
-| :---: | :---: | :--- |
-| Department | 5 | IT, HR, Finance, Marketing, Operations |
-| Project | 8 | Enterprise Cloud, ML Platform, Talent Acquisition, etc. |
-| Employee | 30 | 6 per department, salaries ₹48,000 – ₹84,000 |
+The complete SQL implementation with DDL, sample data, and queries is available in:
+🔗 **[`Experiment_3.sql`](./Experiment_3.sql)**
 
 ---
 
-## 🔍 Queries Demonstrated
+## 📷 Outputs
 
-| # | Query Type | Description |
-| :---: | :--- | :--- |
-| 1 | **Selection** (`WHERE`) | Employees with salary > ₹70,000 |
-| 2 | **Projection** (`SELECT`) | Employee names and salaries only |
-| 3 | **Aggregate Functions** | `COUNT`, `AVG`, `MAX`, `MIN`, `SUM` on all employees |
-| 4 | **GROUP BY** | Employee count & average salary per department |
-| 5 | **HAVING** | Departments with average salary > ₹65,000 |
-| 6 | **CASE Expression** | Classify salaries as High / Medium / Low |
-| 7 | **ORDER BY** | Employees sorted by salary descending |
-| 8 | **Multi-table JOIN** | Employee with department and project names |
+Query execution result screenshots are available in:
+🔗 **[`output/`](./output/)**
 
 ---
 
-## ▶️ How to Run
+## 📊 Result
 
-```bash
-mysql -u root -p < Experiment_3.sql
-```
-
----
-
-## 📁 Files
-
-| File | Description |
-| :--- | :--- |
-| [`Experiment_3.sql`](./Experiment_3.sql) | Complete DDL, DML, and query demonstrations |
-| [`DBMS3.docx`](./DBMS3.docx) | Lab report with query outputs and screenshots |
+The Employee–Department–Project relational database (`CompanyDB`) was successfully created, populated with 5 departments, 8 projects, and 30 employees, and queried using Selection, Projection, Aggregates, GROUP BY, HAVING, CASE, ORDER BY, and Multi-table JOINs.

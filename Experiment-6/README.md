@@ -2,85 +2,70 @@
 
 ## 🎯 Aim
 
-Create a stored procedure `transfer_employee(emp_id, new_dept_id)` with validation and error handling, implement **triggers** for salary validation and audit logging, and test important edge cases.
+To create a stored procedure `transfer_employee(emp_id, new_dept_id)` with validation and error handling, implement triggers for salary validation and audit logging, and test important edge cases.
 
 ---
 
 ## 📋 Objectives
 
-- Create an **audit table** to log salary changes.
-- Implement **BEFORE INSERT** and **BEFORE UPDATE** triggers for salary range validation.
-- Implement an **AFTER UPDATE** trigger for automatic audit logging.
-- Write a **stored procedure** with `START TRANSACTION`, `COMMIT`, `ROLLBACK`, and custom error signals.
-- Test all **edge cases** (invalid employee, invalid department, same department, salary boundaries).
+- Create a stored procedure for transferring an employee between departments.
+- Validate employee and department identifiers before performing a transfer.
+- Use transaction control (`START TRANSACTION`, `COMMIT`, `ROLLBACK`) and error handling inside a stored procedure.
+- Validate salary values using a trigger `BEFORE INSERT` or `UPDATE` (enforcing ₹30,000 to ₹1,50,000 range).
+- Maintain an audit log whenever an employee salary is changed.
+- Test successful and invalid transfer and salary-update edge cases.
 
 ---
 
-## 🗄️ Database: `CompanyDB` (continued from Experiments 3–5)
-
-> ⚠️ Run `Experiment_3.sql` and `Experiment_5.sql` first.
-
----
-
-## 🔍 Components Demonstrated
+## 🗄️ Database Schema: `CompanyDB`
 
 ### 1. `Employee_Salary_Audit` Table
-
 | Column | Type | Description |
 | :--- | :--- | :--- |
 | `audit_id` | INT (AUTO_INCREMENT) | Primary Key |
-| `emp_id` | INT | Employee whose salary changed |
+| `emp_id` | INT | Employee ID |
 | `old_salary` | DECIMAL(10,2) | Previous salary |
 | `new_salary` | DECIMAL(10,2) | Updated salary |
-| `changed_at` | TIMESTAMP | When the change occurred |
-| `action` | VARCHAR(30) | Type of action (e.g., `SALARY UPDATE`) |
+| `changed_at` | TIMESTAMP | Timestamp of change (`DEFAULT CURRENT_TIMESTAMP`) |
+| `action` | VARCHAR(30) | Audit action type (`SALARY UPDATE`) |
 
 ### 2. Triggers
-
-| Trigger | Event | Purpose |
+| Trigger Name | Event | Description |
 | :--- | :--- | :--- |
-| `validate_employee_salary_insert` | BEFORE INSERT | Reject salary outside ₹30,000 – ₹1,50,000 |
-| `validate_employee_salary_update` | BEFORE UPDATE | Reject salary outside ₹30,000 – ₹1,50,000 |
-| `audit_salary_update` | AFTER UPDATE | Log old & new salary to `Employee_Salary_Audit` |
+| `validate_employee_salary_insert` | `BEFORE INSERT ON Employee` | Enforces salary between 30,000 and 150,000 |
+| `validate_employee_salary_update` | `BEFORE UPDATE ON Employee` | Enforces salary between 30,000 and 150,000 |
+| `audit_salary_update` | `AFTER UPDATE ON Employee` | Automatically logs old and new salary to audit table |
 
 ### 3. Stored Procedure: `transfer_employee(p_emp_id, p_new_dept_id)`
-
-**Logic Flow:**
-```
-START TRANSACTION
-  → Validate employee exists
-  → Validate department exists
-  → Check employee is not already in target department
-  → UPDATE Employee SET dept_id = p_new_dept_id
-COMMIT (or ROLLBACK on error)
-```
+Transfers an employee with validation checks:
+- Verifies employee existence (raises SQLSTATE `'45000'` if not found)
+- Verifies department existence (raises SQLSTATE `'45000'` if not found)
+- Prevents redundant transfer if already in target department
+- Manages transaction safety with `EXIT HANDLER FOR SQLEXCEPTION` and `ROLLBACK`
 
 ---
 
-## 🧪 Test Cases
+## 💻 SQL Script
 
-| # | Test | Input | Expected Result |
-| :---: | :--- | :--- | :---: |
-| 1 | ✅ Successful Transfer | `transfer_employee(6, 4)` | Anjali → Marketing |
-| 2 | ❌ Invalid Employee | `transfer_employee(99, 4)` | Error: Employee does not exist |
-| 3 | ❌ Invalid Department | `transfer_employee(6, 99)` | Error: Department does not exist |
-| 4 | ❌ Same Department | `transfer_employee(6, 4)` | Error: Already in this department |
-| 5 | ❌ Salary Too Low | `SET salary = 20000` | Error: Salary must be between 30000 and 150000 |
-| 6 | ✅ Valid Salary Update | `SET salary = 85000` | Success + Audit log entry |
+The complete SQL implementation with table DDL, triggers, stored procedure, and test queries is available in:
+🔗 **[`Experiment_6.sql`](./Experiment_6.sql)**
 
 ---
 
-## ▶️ How to Run
+## 📷 Outputs
 
-```bash
-mysql -u root -p CompanyDB < Experiment_6.sql
-```
+Procedure execution, error handling, and audit log screenshots are available in:
+🔗 **[`output/`](./output/)**
 
 ---
 
-## 📁 Files
+## 📊 Result & Conclusion
 
-| File | Description |
-| :--- | :--- |
-| [`Experiment_6.sql`](./Experiment_6.sql) | Triggers, stored procedure, and test cases |
-| [`DBMS6.docx`](./DBMS6.docx) | Lab report with test outputs and analysis |
+### Result
+1. The `Employee_Salary_Audit` table was created to preserve salary history.
+2. `BEFORE INSERT` and `BEFORE UPDATE` triggers successfully enforced salary limits (30,000 to 1,50,000).
+3. The `AFTER UPDATE` trigger automatically logged old and new salary values into the audit table.
+4. The `transfer_employee` stored procedure successfully transferred an employee with transaction management and raised exceptions for invalid edge cases.
+
+### Conclusion
+Stored procedures provide a centralized and secure way to execute complex business logic and manage transactions with `COMMIT` and `ROLLBACK`. Database triggers enforce business rules and automate audit logging at the database level, ensuring data integrity regardless of external application interfaces.

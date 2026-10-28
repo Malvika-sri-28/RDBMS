@@ -6,7 +6,7 @@ Design an ER diagram for an Indian e-commerce platform with entities `Customer`,
 
 ---
 
-## 📋 Objectives
+## 📋 Objectives & System Requirements
 
 - Identify all **entities** and their **attributes** (simple, composite, multi-valued, derived).
 - Define **primary keys** for each entity and identify the **weak entity** with its **partial key**.
@@ -18,69 +18,49 @@ Design an ER diagram for an Indian e-commerce platform with entities `Customer`,
 ## 🏛️ Entities & Attributes
 
 ### 1. Customer (Strong Entity)
-| Attribute | Type |
-| :--- | :--- |
-| `Customer_ID` | **Primary Key** |
-| `Name` (`First_Name`, `Last_Name`) | Composite Attribute |
-| `Phone_Numbers` | Multi-valued Attribute |
-| `Email` | Simple Attribute |
+- **Primary Key:** `Customer_ID`
+- **Composite Attribute:** `Name` (`First_Name`, `Last_Name`)
+- **Multi-valued Attribute:** `Phone_Numbers`
+- **Simple Attributes:** `Email`
 
 ### 2. Address (Strong Entity)
-| Attribute | Type |
-| :--- | :--- |
-| `Address_ID` | **Primary Key** |
-| `Customer_ID` | Foreign Key |
-| `Street_Address` (`Flat_No`, `Building_Name`, `Street_Name`) | Composite Attribute |
-| `City`, `State`, `Pincode` | Simple Attributes |
+- **Primary Key:** `Address_ID`
+- **Foreign Key:** `Customer_ID`
+- **Composite Attribute:** `Street_Address` (`Flat_No`, `Building_Name`, `Street_Name`)
+- **Simple Attributes:** `City`, `State`, `Pincode`
 
 ### 3. Seller (Strong Entity)
-| Attribute | Type |
-| :--- | :--- |
-| `Seller_ID` | **Primary Key** |
-| `Phone_Numbers` | Multi-valued Attribute |
-| `Email` | Simple Attribute |
+- **Primary Key:** `Seller_ID`
+- **Multi-valued Attribute:** `Phone_Numbers`
+- **Simple Attributes:** `Email`
 
 ### 4. Category (Strong Entity)
-| Attribute | Type |
-| :--- | :--- |
-| `Category_ID` | **Primary Key** |
-| `Category_Name` | Simple Attribute |
-| `HSN_Code` | Simple Attribute |
-| `Parent_Category_ID` | Recursive (Self-referencing) |
+- **Primary Key:** `Category_ID`
+- **Simple Attributes:** `Category_Name`, `HSN_Code`
+- **Recursive Attribute:** `Parent_Category_ID`
 
 ### 5. Product (Superclass Entity)
-| Attribute | Type |
-| :--- | :--- |
-| `Product_ID` | **Primary Key** |
-| `Product_Name` | Simple Attribute |
-| `Image_URLs` | Multi-valued Attribute |
+- **Primary Key:** `Product_ID`
+- **Multi-valued Attribute:** `Image_URLs`
+- **Simple Attributes:** `Product_Name`
 
 ### 6. OrderItem (Weak Entity)
-| Attribute | Type |
-| :--- | :--- |
-| `Item_Number` | **Partial Key / Discriminator** |
-| `(Order_ID, Item_Number)` | **Composite Primary Key** |
-| `Quantity` | Simple Attribute |
-| **Identifying Owner:** | `Order` |
+- **Identifying Owner Entity:** `Order`
+- **Partial Key / Discriminator:** `Item_Number`
+- **Composite Primary Key:** `(Order_ID, Item_Number)`
+- **Simple Attributes:** `Quantity`
 
 ### 7. Order (Strong Entity)
-| Attribute | Type |
-| :--- | :--- |
-| `Order_ID` | **Primary Key** |
-| `Order_item` | Simple Attribute |
+- **Primary Key:** `Order_ID`
+- **Simple Attributes:** `Order_item`
 
 ### 8. Payment (Strong Entity)
-| Attribute | Type |
-| :--- | :--- |
-| `Payment_ID` | **Primary Key** |
-| `Amount` | Simple Attribute |
+- **Primary Key:** `Payment_ID`
+- **Simple Attributes:** `Amount`
 
 ### 9. Delivery (Strong Entity)
-| Attribute | Type |
-| :--- | :--- |
-| `Delivery_ID` | **Primary Key** |
-| `Tracking_No` | Simple Attribute |
-| `Delivery_Status` | Simple Attribute |
+- **Primary Key:** `Delivery_ID`
+- **Simple Attributes:** `Tracking_No`, `Delivery_Status`
 
 ---
 
@@ -88,10 +68,8 @@ Design an ER diagram for an Indian e-commerce platform with entities `Customer`,
 
 The `Product` entity is specialized into:
 
-| Subclass | Inherited From | Additional Attributes |
-| :--- | :--- | :--- |
-| **Electronics** | All `Product` attributes | `Model_Number`, `Warranty_Period` |
-| **Clothing** | All `Product` attributes | `Gender`, `Material`, `Size` |
+- **Electronics:** Inherits all `Product` attributes (`Product_ID`, `Name`, `Image`); adds `Model_Number`, `Warranty_Period`.
+- **Clothing:** Inherits all `Product` attributes; adds `Gender`, `Material`, `Size`.
 
 > **Specialization Type:** Disjoint, Partial
 
@@ -111,6 +89,7 @@ The `Product` entity is specialized into:
 
 ---
 
-## 📝 Report
+## 📷 Outputs
 
-Refer to [`DBMS1.docx`](./DBMS1.docx) for the complete ER diagram and detailed documentation.
+The conceptual ER Diagram is available in:
+🔗 **[`output/`](./output/)**

@@ -2,106 +2,77 @@
 
 ## 🎯 Aim
 
-Identify functional dependencies in a denormalized `Sales` table and normalize it step-by-step from **Unnormalized Form (UNF)** to **Third Normal Form (3NF)** and **Boyce–Codd Normal Form (BCNF)**. Verify **lossless join** and **dependency preservation** using SQL queries.
+To identify functional dependencies in a denormalized Sales table and normalize it step-by-step from Unnormalized Form (UNF) to Third Normal Form (3NF) and Boyce–Codd Normal Form (BCNF). Verify lossless join and dependency preservation using SQL queries.
 
 ---
 
 ## 📋 Objectives
 
-- Create a **denormalized Sales table** with redundant data.
-- Identify all **functional dependencies (FDs)**.
-- Normalize step-by-step: **UNF → 1NF → 2NF → 3NF/BCNF**.
-- Verify the decomposition is a **lossless join** (no spurious tuples).
-- Verify all **functional dependencies are preserved** across the decomposed tables.
+- Create a denormalized Sales table that contains repeating groups and redundant data.
+- Identify all functional dependencies present in the data.
+- Convert the table from UNF to 1NF by eliminating repeating groups and establishing a composite primary key.
+- Convert from 1NF to 2NF by removing partial dependencies.
+- Convert from 2NF to 3NF by removing transitive dependencies.
+- Convert from 3NF to BCNF by ensuring every determinant is a candidate key.
+- Verify lossless join by reconstructing the original data using natural joins.
+- Verify dependency preservation by checking all original FDs against the decomposed tables.
 
 ---
 
 ## 🗄️ Database: `NormalizationDB`
 
-### Denormalized Table: `Sales_UNF`
+### Functional Dependencies Identified
+- **FD1:** `order_id → order_date, customer_id, salesperson_id`
+- **FD2:** `customer_id → customer_name, customer_city`
+- **FD3:** `customer_city → city_state`
+- **FD4:** `product_id → product_name, category, unit_price`
+- **FD5:** `salesperson_id → salesperson_name, commission_pct`
+- **FD6:** `order_id, product_id → quantity`
+- **Candidate Key:** `{order_id, product_id}` (composite key uniquely identifying each row)
 
-| Column | Depends On |
-| :--- | :--- |
-| `order_id` | — (part of key) |
-| `order_date` | `order_id` |
-| `customer_id` | `order_id` |
-| `customer_name` | `customer_id` |
-| `customer_city` | `customer_id` |
-| `city_state` | `customer_city` |
-| `product_id` | — (part of key) |
-| `product_name` | `product_id` |
-| `category` | `product_id` |
-| `unit_price` | `product_id` |
-| `quantity` | `order_id, product_id` |
-| `salesperson_id` | `order_id` |
-| `salesperson_name` | `salesperson_id` |
-| `commission_pct` | `salesperson_id` |
+### Anomalies in UNF / 1NF:
+- **Insertion anomaly:** Cannot add a new product without an order.
+- **Update anomaly:** Changing customer city requires updating multiple rows.
+- **Deletion anomaly:** Deleting the last order of a customer loses customer data.
 
 ---
 
-## 📐 Normalization Steps
+## 📐 Normalization Progression
 
-### Step 1: UNF → 1NF
-- Assign composite primary key `(order_id, product_id)`.
-- All values are already atomic (no repeating groups).
-
-### Step 2: 1NF → 2NF (Remove Partial Dependencies)
-
-| New Table | Primary Key | Columns |
+| Normal Form | Action Taken | Resulting Tables |
 | :--- | :--- | :--- |
-| `Orders_2NF` | `order_id` | `order_date`, `customer_*`, `salesperson_*` |
-| `Products_2NF` | `product_id` | `product_name`, `category`, `unit_price` |
-| `OrderDetails_2NF` | `(order_id, product_id)` | `quantity` |
-
-### Step 3: 2NF → 3NF / BCNF (Remove Transitive Dependencies)
-
-| New Table | Primary Key | Columns |
-| :--- | :--- | :--- |
-| `Customers_3NF` | `customer_id` | `customer_name`, `customer_city` |
-| `Cities_3NF` | `customer_city` | `city_state` |
-| `Salespersons_3NF` | `salesperson_id` | `salesperson_name`, `commission_pct` |
-| `Orders_3NF` | `order_id` | `order_date`, `customer_id` (FK), `salesperson_id` (FK) |
-| `Products_3NF` | `product_id` | `product_name`, `category`, `unit_price` |
-| `OrderDetails_3NF` | `(order_id, product_id)` | `quantity` |
+| **UNF → 1NF** | Ensure atomic attributes and assign composite primary key `(order_id, product_id)` | `Sales_1NF` |
+| **1NF → 2NF** | Remove partial dependencies (attributes depending on only part of the key) | `Orders_2NF`, `Products_2NF`, `OrderDetails_2NF` |
+| **2NF → 3NF** | Remove transitive dependencies (non-key attribute depending on non-key attribute) | `Customers_3NF`, `Cities_3NF`, `Salespersons_3NF`, `Orders_3NF`, `Products_3NF`, `OrderDetails_3NF` |
+| **3NF → BCNF** | Ensure every determinant is a candidate key | Confirmed in BCNF (no further decomposition required) |
 
 ---
 
-## ✅ Verification
+## 💻 SQL Script
 
-### Lossless Join Test
-Reconstructs the original data by joining all 3NF tables and compares:
-
-```
-Original row count  == Reconstructed row count  → ✅ PASS
-Original EXCEPT Reconstructed → Empty           → ✅ PASS
-Reconstructed EXCEPT Original → Empty           → ✅ PASS
-```
-
-### Dependency Preservation Test
-Each FD is verified by checking for violations in the corresponding 3NF table:
-
-| FD | Table Checked | Violations |
-| :--- | :--- | :---: |
-| `order_id → order_date, customer_id, salesperson_id` | `Orders_3NF` | 0 ✅ |
-| `customer_id → customer_name, customer_city` | `Customers_3NF` | 0 ✅ |
-| `customer_city → city_state` | `Cities_3NF` | 0 ✅ |
-| `product_id → product_name, category, unit_price` | `Products_3NF` | 0 ✅ |
-| `salesperson_id → salesperson_name, commission_pct` | `Salespersons_3NF` | 0 ✅ |
-| `(order_id, product_id) → quantity` | `OrderDetails_3NF` | 0 ✅ |
+The complete SQL implementation with table decomposition, lossless join verification, and dependency preservation tests is available in:
+🔗 **[`Experiment_7.sql`](./Experiment_7.sql)**
 
 ---
 
-## ▶️ How to Run
+## 📷 Outputs
 
-```bash
-mysql -u root -p < Experiment_7.sql
-```
+Normalization execution, lossless join, and dependency preservation output screenshots are available in:
+🔗 **[`output/`](./output/)**
 
 ---
 
-## 📁 Files
+## 📊 Result & Conclusion
 
-| File | Description |
-| :--- | :--- |
-| [`Experiment_7.sql`](./Experiment_7.sql) | Full normalization script with verification queries |
-| [`DBMS7.docx`](./DBMS7.docx) | Lab report with step-by-step analysis |
+### Result
+1. A denormalized `Sales_UNF` table was created with 14 columns containing redundant data across orders, customers, products, and salespersons.
+2. Six functional dependencies were identified with `{order_id, product_id}` as the candidate key.
+3. 1NF was achieved by assigning a composite primary key (data was already atomic).
+4. 2NF was achieved by removing partial dependencies — separating `Orders_2NF`, `Products_2NF`, and `OrderDetails_2NF`.
+5. 3NF was achieved by removing transitive dependencies — extracting `Customers_3NF`, `Cities_3NF`, and `Salespersons_3NF` from the Orders table.
+6. BCNF was confirmed — every determinant in every table is a candidate key; no further decomposition was required.
+7. Lossless join was verified — joining all normalized tables reproduced exactly 10 original rows with zero missing or spurious tuples.
+8. Dependency preservation was verified — all 6 original FDs are enforceable within individual tables without cross-table joins.
+
+### Conclusion
+Normalization systematically eliminates data redundancy and update anomalies by decomposing a relation based on its functional dependencies. The step-by-step progression from UNF through 1NF, 2NF, 3NF, and BCNF ensures that each table stores only closely related facts, reducing insertion, update, and deletion anomalies. The lossless join property guarantees that no information is lost during decomposition, while dependency preservation ensures that all original business rules (functional dependencies) can be enforced locally within individual tables without requiring expensive multi-table joins. Together, these properties confirm that the normalized schema is both correct and practical for real-world database design.

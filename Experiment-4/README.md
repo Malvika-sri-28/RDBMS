@@ -2,66 +2,58 @@
 
 ## 🎯 Aim
 
-Using the `CompanyDB` Employee schema (from Experiment 3), write and execute SQL queries with **INNER JOIN**, **LEFT JOIN**, **Self-Join**, **3-Way Join**, **Correlated Subqueries**, **EXISTS**, and simulated **INTERSECT / EXCEPT**. Compare execution plans of selected queries using **EXPLAIN**.
+Using the Employee schema, write and execute SQL queries with **INNER JOIN**, **LEFT JOIN**, **Self-Join**, **3-Way Join**, **Correlated Subqueries**, **EXISTS**, and simulated **INTERSECT** and **EXCEPT**. Compare the execution plans of selected queries using **EXPLAIN**.
 
 ---
 
 ## 📋 Objectives
 
-- Understand and apply different types of **JOINs** (INNER, LEFT, SELF, 3-Way).
-- Write **correlated subqueries** that reference the outer query.
-- Use **EXISTS** to check for the existence of related rows.
-- Simulate **INTERSECT** and **EXCEPT** set operations using subqueries.
-- Use **EXPLAIN** to analyze and compare query execution plans.
+- Understand how different types of JOIN operations combine rows from related tables.
+- Perform a **self-join** on the `Employee` table to compare pairs within the same department.
+- Use **correlated subqueries** and **EXISTS** for row-by-row and existence-based filtering.
+- Simulate **INTERSECT** and **EXCEPT** set operations using nested `IN` and `NOT IN` subqueries.
+- Inspect and compare query execution plans using the **EXPLAIN** utility.
 
 ---
 
-## 🗄️ Database: `CompanyDB` (continued from Experiment 3)
+## 🗄️ Database Schema: `CompanyDB`
 
-> ⚠️ Run `Experiment_3.sql` first to create the schema and insert data.
-
----
-
-## 🔍 Queries Demonstrated
-
-| # | Query Type | Description |
-| :---: | :--- | :--- |
-| 1 | **INNER JOIN** | Employee IDs, names, salaries with department names |
-| 2 | **LEFT JOIN** | All departments with any matching employees |
-| 3 | **SELF JOIN** | Pairs of employees in the same department (first 10) |
-| 4 | **3-WAY JOIN** | Employee → Department → Project details |
-| 5 | **Correlated Subquery** | Employees earning above their department's average |
-| 6 | **EXISTS** | Departments with at least one employee earning > ₹80,000 |
-| 7 | **Simulated INTERSECT** | IT employees AND earning > ₹70,000 |
-| 8 | **Simulated EXCEPT** | Employees earning > ₹70,000 EXCEPT those in IT |
-| 9 | **EXPLAIN** | Execution plan comparison for JOIN vs Subquery vs EXISTS |
+| Table | Important Columns | Relationships |
+| :--- | :--- | :--- |
+| `Employee` | `emp_id`, `emp_name`, `salary`, `hire_date`, `dept_id`, `project_id` | `dept_id` → Department, `project_id` → Project |
+| `Department` | `dept_id`, `dept_name` | Primary Key: `dept_id` |
+| `Project` | `project_id`, `project_name`, `budget`, `dept_id` | Primary Key: `project_id`, `dept_id` → Department |
 
 ---
 
-## 📊 EXPLAIN Comparison
+## 💻 SQL Script
 
-The script runs `EXPLAIN` on three queries to compare how MySQL optimizes:
-
-| Query | Key Observation |
-| :--- | :--- |
-| INNER JOIN with WHERE | Simple table scan, filter applied after join |
-| Correlated Subquery | Dependent subquery re-evaluated per outer row |
-| EXISTS | Semi-join optimization, stops at first match |
+The complete SQL implementation with all queries and EXPLAIN statements is available in:
+🔗 **[`Experiment_4.sql`](./Experiment_4.sql)**
 
 ---
 
-## ▶️ How to Run
+## 📷 Outputs
 
-```bash
-# Ensure CompanyDB exists (run Experiment 3 first)
-mysql -u root -p CompanyDB < Experiment_4.sql
-```
+Query execution result screenshots are available in:
+🔗 **[`output/`](./output/)**
 
 ---
 
-## 📁 Files
+## 🔍 EXPLAIN — Execution Plan Comparison
 
-| File | Description |
-| :--- | :--- |
-| [`Experiment_4.sql`](./Experiment_4.sql) | All JOIN, subquery, set operation, and EXPLAIN queries |
-| [`DBMS4.docx`](./DBMS4.docx) | Lab report with query results and EXPLAIN analysis |
+The `EXPLAIN` statement displays how the MySQL query optimizer executes queries:
+
+| Query | Main Operation | Plan Aspect to Compare | Expected Observation |
+| :--- | :--- | :--- | :--- |
+| **INNER JOIN** | Employee ↔ Department | Join access on `dept_id` | Optimizer scans base tables and joins via hash join or primary key index. |
+| **Correlated Subquery** | Outer Employee + per-row department AVG | Subquery execution & rows examined | Evaluates the subquery repeatedly for each outer candidate row (`DEPENDENT SUBQUERY`). |
+| **EXISTS** | Department + existence test on Employee | Early-exit filtering | Halts evaluation as soon as the first matching employee row is found per department. |
+
+---
+
+## 📊 Result & Conclusion
+
+- Different SQL constructs achieve related data retrieval objectives through distinct optimizer access paths.
+- While joins merge relational structures and set subqueries isolate target intersections, correlated subqueries and `EXISTS` evaluate row-level dependencies.
+- The `EXPLAIN` utility confirms how query structure influences join buffers, index utilization, and execution cost.

@@ -2,7 +2,7 @@
 
 ## 🎯 Aim
 
-Convert the ER diagram (Experiment 1) into a relational schema. Write complete MySQL `CREATE TABLE` statements with primary keys, foreign keys, `NOT NULL`, `UNIQUE`, `ON DELETE CASCADE` and `SET NULL` constraints. Insert sample data and demonstrate referential integrity violations.
+Convert the ER diagram into a relational schema. Write complete MySQL `CREATE TABLE` statements with primary keys, foreign keys, `NOT NULL`, `UNIQUE`, `ON DELETE CASCADE` and `SET NULL` constraints. Insert sample data and demonstrate referential integrity violations.
 
 ---
 
@@ -12,13 +12,11 @@ Convert the ER diagram (Experiment 1) into a relational schema. Write complete M
 - Define **primary keys**, **foreign keys**, and column-level constraints (`NOT NULL`, `UNIQUE`, `DEFAULT`).
 - Specify **referential actions** (`ON DELETE CASCADE`, `ON DELETE SET NULL`).
 - Insert realistic **Indian e-commerce sample data**.
-- Demonstrate what happens when **constraint violations** occur.
+- Demonstrate and verify what happens when **constraint violations** occur.
 
 ---
 
-## 🗄️ Database: `IndianEcommerceDB`
-
-### Schema Overview
+## 🗄️ Database Schema: `IndianEcommerceDB`
 
 | Table | Primary Key | Foreign Key(s) | Referential Action |
 | :--- | :--- | :--- | :--- |
@@ -33,45 +31,20 @@ Convert the ER diagram (Experiment 1) into a relational schema. Write complete M
 
 ---
 
-## 📊 Sample Data Summary
+## 💻 SQL Script
 
-| Table | Rows Inserted |
-| :---: | :---: |
-| Category | 6 |
-| Seller | 5 |
-| Product | 15 |
-| Customer | 10 |
-| Orders | 12 |
-| Order_Item | 15 |
-| Payment | 12 |
-| Review | 10 |
+The complete SQL implementation with table creation, data insertion, and integrity checks is available in:
+🔗 **[`Experiment_2.sql`](./Experiment_2.sql)**
 
 ---
 
-## ⚠️ Constraint Violation Demonstrations
+## 📷 Outputs
 
-| # | Violation Type | What Was Tested | Expected Result |
-| :---: | :--- | :--- | :--- |
-| 1 | **FOREIGN KEY** | Insert order with non-existent `customer_id = 99` | ❌ Error |
-| 2 | **UNIQUE** | Duplicate `email` in `Customer` table | ❌ Error |
-| 3 | **NOT NULL** | Insert `Seller` with `gst_number = NULL` | ❌ Error |
-| 4 | **ON DELETE CASCADE** | Delete `Seller` → Products of that seller removed | ✅ Cascade |
-| 5 | **ON DELETE SET NULL** | Delete `Category` → Product's `category_id` set to `NULL` | ✅ Set NULL |
-| 6 | **UNIQUE (Payment)** | Duplicate `order_id` in `Payment` table | ❌ Error |
+Constraint verification and violation output screenshots are available in:
+🔗 **[`output/`](./output/)**
 
 ---
 
-## ▶️ How to Run
+## 📊 Result
 
-```bash
-mysql -u root -p < Experiment_2.sql
-```
-
----
-
-## 📁 Files
-
-| File | Description |
-| :--- | :--- |
-| [`Experiment_2.sql`](./Experiment_2.sql) | Complete SQL script with DDL, DML, and violation demos |
-| [`DBMS2.docx`](./DBMS2.docx) | Detailed lab report with screenshots |
+The Indian E-Commerce Platform relational database (`IndianEcommerceDB`) was successfully designed, implemented, and tested with **6 Categories**, **5 Sellers**, **15 Products**, **10 Customers**, **12 Orders**, **15 Order Items**, **12 Payments**, and **10 Reviews**. All primary key, foreign key, NOT NULL, UNIQUE, ON DELETE CASCADE, and ON DELETE SET NULL constraints were verified.
