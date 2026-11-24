@@ -102,3 +102,4 @@ Detailed execution outputs, record counts, and tabular `EXPLAIN` execution plan 
 
 ### Conclusion
 Database indexes are critical structures that transform $O(N)$ sequential table scans into $O(\log N)$ logarithmic tree lookups. Single-column indexes are ideal for unique or highly selective lookup attributes (such as PNR or order numbers). Composite indexes further accelerate queries with multiple filter predicates when columns are ordered by equality columns first. However, index design must be balanced against insert/update write overhead and storage costs.
+

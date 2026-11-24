@@ -83,3 +83,4 @@ Detailed execution plans, comparative metric tables, and query execution outputs
 
 ### Conclusion
 Writing efficient SQL queries requires understanding both relational algebra and physical storage engine mechanisms. Indexes alone do not guarantee performance if queries are written non-sargably or if sorting requires full filesorts. By pairing composite index design with query refactoring (range predicates, anti-joins, covering attributes), database systems can handle orders of magnitude higher throughput with minimal CPU and I/O overhead.
+

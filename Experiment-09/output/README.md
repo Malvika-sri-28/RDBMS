@@ -75,3 +75,4 @@ WHERE train_no = 12015
 | id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filtered | Extra |
 | :---: | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
 | `1` | `SIMPLE` | `Railway_Bookings` | `NULL` | `ref` | `idx_train_date_status` | **idx_train_date_status** | `71` | `const,const,const` | **2** | `100.00` | `NULL` |
+

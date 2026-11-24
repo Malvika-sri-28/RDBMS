@@ -159,3 +159,4 @@ WHERE train_no = 12015
 -- =========================================================================
 -- Inspect created indexes on the Railway_Bookings table
 SHOW INDEX FROM Railway_Bookings;
+

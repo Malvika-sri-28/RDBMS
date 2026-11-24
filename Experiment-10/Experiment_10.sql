@@ -287,3 +287,4 @@ JOIN Orders o ON c.customer_id = o.customer_id
 WHERE o.order_status = 'COMPLETED' 
 GROUP BY c.city 
 ORDER BY revenue DESC;
+

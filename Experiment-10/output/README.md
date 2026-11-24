@@ -142,3 +142,4 @@ GROUP BY c.city ORDER BY revenue DESC;
 | :---: | :---: | :--- | :---: | :---: | :---: | :--- |
 | `1` | `SIMPLE` | `o` | **ref** | **idx_orders_covering** | **~3990** | **Using where; Using index** |
 | `1` | `SIMPLE` | `c` | **ref** | **idx_customers_id_city** | **1** | **Using index** |
+

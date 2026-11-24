@@ -145,3 +145,4 @@ SELECT * FROM Accounts;
 
 -- View complete transaction audit log
 SELECT * FROM Transaction_Logs;
+
